@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+  </head>
+
+  <body>
+
+    <h1>Weather App</h1>
+    <h3>Please enter a U.S. city and state.</h3>
+
+    <form class='searchCity'>
+        <input type="text" placeholder="Orlando, Florida">
+        <button type="submit" class="searchButton">Search</button>
+        <button type="submit" class="previousButton">Previous</button>
+    </form>
+
+    <div>
+        <p class='firstCity'> </p>
+        <button type="button" class="viewMoreOne">View More</button>
+    </div>
+
+    <div>
+        <p class='secondCity'> </p>
+        <button type="button" class="viewMoreTwo">View More</button>
+    </div>
+
+    <div>
+        <p class='thirdCity'> </p>
+        <button type="button" class="viewMoreThree">View More</button>
+    </div>
+
+    <div>
+        <p class='previousCity'></p>
+    </div>
+
+    <script>
+        const baseURL = 'api.openweathermap.org';
+        const key = "f561787d1d228ebb3f7ab09e4729c788";
+        const url = 'http://api.openweathermap.org/data/2.5/weather?zip=32817,us&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
+        var weatherObj;
+        let emptyString = '';
+        var myCities; 
+        let previousCity = 'HELLO';
+        let previousCityTwo = 'WORLD';
+        let threeCitiesDisplay = [];
+        let i = 0;
+        let loadCounter = 0;
+        
+
+
+        // on-load Fetch
+        if (emptyString !== '')
+        {
+            postData('http://localhost:8080/locations', emptyString)
+        }
+
+        fetch('http://localhost:8080/locations')
+        .then(response => response.json())
+        .then(json => {
+            myCities = json 
+            if (myCities.length){
+                console.log("yeehaw!")
+                while (loadCounter !== 3){
+                  let onLoadLocation = myCities[loadCounter].split(",")
+                  console.log(onLoadLocation)
+                  searchTemps(onLoadLocation[0], onLoadLocation[1], loadCounter)
+                  loadCounter++;
+                }
+            }
+            else{
+                console.log("Nooooo!!!!!!!")
+            }
+        })
+        
+
+        // Fetch weather API
+        function searchTemps(city, state, count){
+            const urlOne = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + "," + state + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
+            
+            if (count == 0){
+                fetch(urlOne).then(function(response){
+                    response.json()
+                    .then(response => weatherObj = response)
+                    .then(() => document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                });
+            }
+            else if (count == 1){
+                fetch(urlOne).then(function(response){
+                    response.json()
+                    .then(response => weatherObj = response)
+                    .then(() => document.querySelector(".secondCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                });
+            }
+            else{
+                fetch(urlOne).then(function(response){
+                    response.json()
+                    .then(response => weatherObj = response)
+                    .then(() => document.querySelector(".thirdCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                });
+            }
+
+        }
+
+         // POST to http://localhost:8080/locations
+        function postData(serverURL, cityString) {
+            fetch(serverURL, {
+                method: 'POST', 
+                mode: 'no-cors', 
+                cache: 'no-cache', 
+                credentials: 'same-origin', 
+                headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*'},
+                body: JSON.stringify(cityString) // body data type must match "Content-Type" header
+            })
+        }
+
+        // Event handler searches city weather API on submit
+        // Adds city to server array
+        let searchBtn = document.querySelector('.searchButton');  
+        searchBtn.onclick = function(event){
+
+	        // prevents page refreshing
+	        event.preventDefault();
+
+	        // add task to array
+	        let input = document.querySelector('input');
+            let formEntry = input.value.split(',');
+            // console.log(formEntry); // formEntry currently array of location
+		    input.value = '';   
+
+            var cityEnteredString= formEntry.toString();
+            //console.log(cityEnteredString);  // toString ["Austin","Texas"] -> "Austin, Texas"
+
+            // saving previous city search for "previous" button
+            previousCityTwo = previousCity;
+            previousCity = cityEnteredString;
+            
+
+            postData('http://localhost:8080/locations', cityEnteredString)
+
+            if (i == 2){
+                threeCitiesDisplay[i] = cityEnteredString;
+                console.log(threeCitiesDisplay)
+                searchTemps(formEntry[0], formEntry[1], i);
+                i = 0
+            }
+            else{
+                threeCitiesDisplay[i] = cityEnteredString;
+                searchTemps(formEntry[0], formEntry[1], i);
+                i++;
+            }
+            
+        };
+
+        // GET array of searched cities from server
+        document.querySelector('.previousButton').onclick = function(event){
+            event.preventDefault();
+            document.querySelector(".previousCity").innerHTML = "The previous city is " + previousCityTwo;
+        };
+
+
+        document.querySelector('.viewMoreOne').onclick = function(event){
+            event.preventDefault();
+            document.querySelector(".previousCity").innerHTML = "The previous city is " + previousCityTwo;
+        };
+
+        
+    </script>
+
+  </body>
+</html>
