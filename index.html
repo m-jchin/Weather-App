@@ -18,17 +18,20 @@
 
     <div>
         <p class='firstCity'> </p>
-        <button type="button" class="viewMoreOne">View More</button>
+        <div id='viewMoreOne'> </div>
+        <div id='goBackOne'> </div>
     </div>
 
     <div>
         <p class='secondCity'> </p>
-        <button type="button" class="viewMoreTwo">View More</button>
+        <div id='viewMoreTwo'> </div>
+        <div id='goBackTwo'> </div>
     </div>
 
     <div>
         <p class='thirdCity'> </p>
-        <button type="button" class="viewMoreThree">View More</button>
+        <div id='viewMoreThree'> </div>
+        <div id='goBackThree'> </div>
     </div>
 
     <div>
@@ -38,17 +41,19 @@
     <script>
         const baseURL = 'api.openweathermap.org';
         const key = "f561787d1d228ebb3f7ab09e4729c788";
-        const url = 'http://api.openweathermap.org/data/2.5/weather?zip=32817,us&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
-        var weatherObj;
+        //const url = 'http://api.openweathermap.org/data/2.5/weather?zip=32817,us&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
+        let weatherObj;
         let emptyString = '';
-        var myCities; 
+        let myCities; 
         let previousCity = 'HELLO';
         let previousCityTwo = 'WORLD';
         let threeCitiesDisplay = [];
         let i = 0;
         let loadCounter = 0;
+        let btn;
+        let currentTemp = 'currentTemp';
+        let searchMore = 'searchMore';
         
-
 
         // on-load Fetch
         if (emptyString !== '')
@@ -65,7 +70,7 @@
                 while (loadCounter !== 3){
                   let onLoadLocation = myCities[loadCounter].split(",")
                   console.log(onLoadLocation)
-                  searchTemps(onLoadLocation[0], onLoadLocation[1], loadCounter)
+                  searchTemps(onLoadLocation[0], onLoadLocation[1], loadCounter, currentTemp)
                   loadCounter++;
                 }
             }
@@ -76,32 +81,75 @@
         
 
         // Fetch weather API
-        function searchTemps(city, state, count){
+        function searchTemps(city, state, count, searchType){
             const urlOne = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + "," + state + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
             
-            if (count == 0){
-                fetch(urlOne).then(function(response){
-                    response.json()
-                    .then(response => weatherObj = response)
-                    .then(() => document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
-                });
-            }
-            else if (count == 1){
-                fetch(urlOne).then(function(response){
-                    response.json()
-                    .then(response => weatherObj = response)
-                    .then(() => document.querySelector(".secondCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
-                });
-            }
-            else{
-                fetch(urlOne).then(function(response){
-                    response.json()
-                    .then(response => weatherObj = response)
-                    .then(() => document.querySelector(".thirdCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
-                });
-            }
 
+            // this section displays current temperatures for the city searched
+            if (searchType == "currentTemp"){ 
+                if (count == 0){
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => weatherObj = response)
+                        .then(() => document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                        .then(() =>  document.getElementById("viewMoreOne").innerHTML = '<button>View More</button>');
+                    });
+                }
+                else if (count == 1){
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => weatherObj = response)
+                        .then(() => document.querySelector(".secondCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                        .then(() =>  document.getElementById("viewMoreTwo").innerHTML = '<button>View More</button>');
+                    });
+                }
+                else{
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => weatherObj = response)
+                        .then(() => document.querySelector(".thirdCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
+                        .then(() =>  document.getElementById("viewMoreThree").innerHTML = '<button>View More</button>');
+                    });
+                }
+            }
+            else if(searchType == "searchMore"){ // this section displays more weather information when View More is pressed
+                if (count == 0){
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => {
+                            weatherObj = response;
+                            document.querySelector(".firstCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                            document.getElementById("viewMoreOne").style.display = 'none';
+                            document.getElementById("goBackOne").innerHTML = '<button>Return</button>';
+                        })     
+                    });
+                }
+                else if (count == 1){
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => {
+                            weatherObj = response;
+                            document.querySelector(".secondCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                            document.getElementById("viewMoreTwo").style.display = 'none';
+                            document.getElementById("goBackTwo").innerHTML = '<button>Return</button>';
+                        })     
+                    });
+                }
+                else{
+                    fetch(urlOne).then(function(response){
+                        response.json()
+                        .then(response => {
+                            weatherObj = response;
+                            document.querySelector(".thirdCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                            document.getElementById("viewMoreThree").style.display = 'none';
+                            document.getElementById("goBackThree").innerHTML = '<button>Return</button>';
+                        })     
+                    });
+                }
+            }
         }
+
+        
 
          // POST to http://localhost:8080/locations
         function postData(serverURL, cityString) {
@@ -136,21 +184,20 @@
             previousCityTwo = previousCity;
             previousCity = cityEnteredString;
             
-
+            // saving searches to server
             postData('http://localhost:8080/locations', cityEnteredString)
 
+            // display current temperature at city to div 1,2, or 3
             if (i == 2){
-                threeCitiesDisplay[i] = cityEnteredString;
-                console.log(threeCitiesDisplay)
-                searchTemps(formEntry[0], formEntry[1], i);
-                i = 0
+                //threeCitiesDisplay[i] = cityEnteredString;
+                searchTemps(formEntry[0], formEntry[1], i, currentTemp);
+                i = 0;
             }
             else{
-                threeCitiesDisplay[i] = cityEnteredString;
-                searchTemps(formEntry[0], formEntry[1], i);
+                //threeCitiesDisplay[i] = cityEnteredString;
+                searchTemps(formEntry[0], formEntry[1], i, currentTemp);
                 i++;
             }
-            
         };
 
         // GET array of searched cities from server
@@ -159,11 +206,34 @@
             document.querySelector(".previousCity").innerHTML = "The previous city is " + previousCityTwo;
         };
 
-
-        document.querySelector('.viewMoreOne').onclick = function(event){
+        document.querySelector('#viewMoreOne').onclick = function(event){
             event.preventDefault();
-            document.querySelector(".previousCity").innerHTML = "The previous city is " + previousCityTwo;
+            let viewCount = 0;
+            let firstSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                firstSearch = myCities[0].split(",");
+                searchTemps(firstSearch[0], firstSearch[1], viewCount, searchMore);
+            })
+         
         };
+
+        document.querySelector('#viewMoreTwo').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 1
+        };
+
+        document.querySelector('#viewMoreThree').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 2
+        };
+
+
 
         
     </script>
