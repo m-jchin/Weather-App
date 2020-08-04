@@ -19,19 +19,19 @@
     <div>
         <p class='firstCity'> </p>
         <div id='viewMoreOne'> </div>
-        <div id='goBackOne'> </div>
+        <div id='returnOne'> </div>
     </div>
 
     <div>
         <p class='secondCity'> </p>
         <div id='viewMoreTwo'> </div>
-        <div id='goBackTwo'> </div>
+        <div id='returnTwo'> </div>
     </div>
 
     <div>
         <p class='thirdCity'> </p>
         <div id='viewMoreThree'> </div>
-        <div id='goBackThree'> </div>
+        <div id='returnThree'> </div>
     </div>
 
     <div>
@@ -92,7 +92,9 @@
                         response.json()
                         .then(response => weatherObj = response)
                         .then(() => document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObj.name + " is " + weatherObj.main.temp + " degrees fahrenheit.") 
-                        .then(() =>  document.getElementById("viewMoreOne").innerHTML = '<button>View More</button>');
+                        .then(() =>  document.getElementById("viewMoreOne").innerHTML = '<button>View More</button>')
+                        .then(() => document.getElementById("viewMoreOne").style.display = 'inline')
+                        .then(() => document.getElementById("returnOne").style.display = 'none');
                     });
                 }
                 else if (count == 1){
@@ -120,7 +122,8 @@
                             weatherObj = response;
                             document.querySelector(".firstCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
                             document.getElementById("viewMoreOne").style.display = 'none';
-                            document.getElementById("goBackOne").innerHTML = '<button>Return</button>';
+                            document.getElementById("returnOne").innerHTML = '<button>Return</button>';
+                            document.getElementById("returnOne").style.display = 'inline';
                         })     
                     });
                 }
@@ -131,7 +134,7 @@
                             weatherObj = response;
                             document.querySelector(".secondCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
                             document.getElementById("viewMoreTwo").style.display = 'none';
-                            document.getElementById("goBackTwo").innerHTML = '<button>Return</button>';
+                            document.getElementById("returnTwo").innerHTML = '<button>Return</button>';
                         })     
                     });
                 }
@@ -142,7 +145,7 @@
                             weatherObj = response;
                             document.querySelector(".thirdCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
                             document.getElementById("viewMoreThree").style.display = 'none';
-                            document.getElementById("goBackThree").innerHTML = '<button>Return</button>';
+                            document.getElementById("returnThree").innerHTML = '<button>Return</button>';
                         })     
                     });
                 }
@@ -226,15 +229,55 @@
         document.querySelector('#viewMoreTwo').onclick = function(event){
             event.preventDefault();
             let viewCount = 1
+
+            let secondSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                secondSearch = myCities[0].split(",");
+                searchTemps(secondSearch[0], secondSearch[1], viewCount, searchMore);
+            })
         };
 
         document.querySelector('#viewMoreThree').onclick = function(event){
             event.preventDefault();
             let viewCount = 2
+            let thirdSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                thirdSearch = myCities[0].split(",");
+                searchTemps(thirdSearch[0], thirdSearch[1], viewCount, searchMore);
+            })
         };
 
+        document.querySelector('#returnOne').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 0;
 
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                firstSearch = myCities[0].split(",");
+                searchTemps(firstSearch[0], firstSearch[1], viewCount, currentTemp);
+            })
 
+        }
+
+        /*
+        TODO: Fetch each JSON once and save each to use for viewMore/return instead of fetching a ton?
+        */
         
     </script>
 
