@@ -47,7 +47,7 @@
         let myCities; 
         let previousCity = 'HELLO';
         let previousCityTwo = 'WORLD';
-        let threeCitiesDisplay = [];
+        let threeCitiesSave = [];
         let i = 0;
         let loadCounter = 0;
         let btn;
@@ -73,6 +73,7 @@
                   searchTemps(onLoadLocation[0], onLoadLocation[1], loadCounter, currentTemp)
                   loadCounter++;
                 }
+                console.log(myCities)
             }
             else{
                 console.log("Nooooo!!!!!!!")
