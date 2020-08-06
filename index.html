@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+  </head>
+
+  <body>
+
+    <h1>Weather App</h1>
+    <h3>Please enter a U.S. city and state.</h3>
+
+    <form class='searchCity'>
+        <input type="text" placeholder="Orlando, Florida">
+        <button type="submit" class="searchButton">Search</button>
+        <button type="submit" class="previousButton">Previous</button>
+    </form>
+
+    <div>
+        <p class='firstCity'> </p>
+        <div id='viewMoreOne'> </div>
+        <div id='returnOne'> </div>
+    </div>
+
+    <div>
+        <p class='secondCity'> </p>
+        <div id='viewMoreTwo'> </div>
+        <div id='returnTwo'> </div>
+    </div>
+
+    <div>
+        <p class='thirdCity'> </p>
+        <div id='viewMoreThree'> </div>
+        <div id='returnThree'> </div>
+    </div>
+
+    <div>
+        <p class='previousCity'></p>
+    </div>
+
+    <script>
+        const baseURL = 'api.openweathermap.org';
+        const key = "f561787d1d228ebb3f7ab09e4729c788";
+        //const url = 'http://api.openweathermap.org/data/2.5/weather?zip=32817,us&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
+        let weatherObj;
+        let emptyString = '';
+        
+        let previousCity = 'HELLO';
+        let previousCityTwo = 'WORLD';
+        let threeCitiesSave = [];
+        let i = 0;
+        let loadCounter = 0;
+        let btn;
+        let currentTemp = 'currentTemp';
+        let searchMore = 'searchMore';
+        
+        let serverCities; 
+        let cityJsons = [];     
+        
+        function searchyBoi(){
+            let abc = startUpTwo();
+            console.log(abc)
+        }
+
+        searchyBoi()
+        
+        // POST to http://localhost:8080/locations
+        function postData(serverURL, cityString) {
+            fetch(serverURL, {
+                method: 'POST', 
+                mode: 'no-cors', 
+                cache: 'no-cache', 
+                credentials: 'same-origin', 
+                headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*'},
+                body: JSON.stringify(cityString) // body data type must match "Content-Type" header
+            })
+        }
+
+        async function getWeather(location){
+            const url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
+            let response = await fetch(url).then(response => response.json())
+            return response; 
+        }
+
+        async function startup(){
+            let myCities = await fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                x = json; 
+                return x;
+            })
+
+            //return x;
+            console.log(x);
+            if (!(myCities.length)){
+                console.log("No information present!")
+                return serverCities = [];
+            }
+            else{
+                return myCities; 
+            }
+        }
+
+        async function startUpTwo(){         
+            serverCities = await startup();
+            console.log(serverCities)
+
+            if  (serverCities.length > 0){
+                for (let w = 0; w < 3; w++){
+                    cityJsons[w] = await getWeather(serverCities[w]);
+                }
+                
+                console.log(serverCities)
+                console.log(cityJsons);
+
+                for (let j = 0; j < 3; j++){
+                    searchTemps(cityJsons[j], j, currentTemp)
+                }
+                return cityJsons;
+            }
+        }
+
+        // Event handler searches city weather API on submit
+        // Adds city to server array
+        let searchBtn = document.querySelector('.searchButton');  
+        searchBtn.onclick = async function(event){
+            
+	        // prevents page refreshing
+	        event.preventDefault();
+
+	        // add task to array
+	        let input = document.querySelector('input');
+            let formEntry = input.value.split(',');
+		    input.value = '';   
+
+            let cityEnteredString= formEntry.toString();
+            
+            
+            // saving searches to server
+            postData('http://localhost:8080/locations', cityEnteredString)
+            
+
+            // display current temperature at city to div 1,2, or 3
+            if (i == 2){
+                let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
+                        .then(response => response.json())
+                        .then(json => cityJsons[i] = json, searchTemps(cityJsons[i], i, currentTemp));
+                searchTemps(a, i, currentTemp);
+                console.log(a)
+                console.log(i)
+                console.log(cityJsons)
+                i = 0;
+            }
+            else{ 
+                let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
+                        .then(response => response.json())
+                        .then(json => cityJsons[i] = json, searchTemps(cityJsons[i], i, currentTemp));
+                console.log(a)
+                console.log(i)
+                console.log(cityJsons)
+                searchTemps(a, i, currentTemp);
+                i++;
+            }
+        };
+
+
+
+        // Fetch weather API
+        function searchTemps(weatherObject, count, searchType){
+            
+            // this section displays current temperatures for the city searched
+            if (searchType == "currentTemp"){ 
+                if (count == 0){  
+                    document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.getElementById("viewMoreOne").innerHTML = '<button>View More</button>'
+                    document.getElementById("viewMoreOne").style.display = 'inline'
+                    document.getElementById("returnOne").style.display = 'none' 
+                }
+                else if (count == 1){             
+                    document.querySelector(".secondCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.getElementById("viewMoreTwo").innerHTML = '<button>View More</button>'
+        
+                }
+                else{    
+                    document.querySelector(".thirdCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.getElementById("viewMoreThree").innerHTML = '<button>View More</button>';  
+                }
+            }
+            else if(searchType == "searchMore"){ // this section displays more weather information when View More is pressed
+                if (count == 0){
+                    
+                    document.querySelector(".firstCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                    document.getElementById("viewMoreOne").style.display = 'none';
+                    document.getElementById("returnOne").innerHTML = '<button>Return</button>';
+                    document.getElementById("returnOne").style.display = 'inline';  
+                }
+                else if (count == 1){
+                    
+                    document.querySelector(".secondCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                    document.getElementById("viewMoreTwo").style.display = 'none';
+                    document.getElementById("returnTwo").innerHTML = '<button>Return</button>';
+                }
+                else{    
+                    document.querySelector(".thirdCity").innerHTML  = `<p>Weather conditions: ${weatherObj.weather[0].main}<br>Feels Like: ${weatherObj.main.feels_like} degrees Fahrenheit<br>Wind Speed: ${weatherObj.wind.speed}mph </p>`;
+                    document.getElementById("viewMoreThree").style.display = 'none';
+                    document.getElementById("returnThree").innerHTML = '<button>Return</button>';
+
+                }
+            }
+        }
+
+        /*
+
+        // GET array of searched cities from server
+        document.querySelector('.previousButton').onclick = function(event){
+            event.preventDefault();
+            document.querySelector(".previousCity").innerHTML = "The previous city is " + previousCityTwo;
+        };
+
+        document.querySelector('#viewMoreOne').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 0;
+            let firstSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                firstSearch = myCities[0].split(",");
+                searchTemps(firstSearch[0], firstSearch[1], viewCount, searchMore);
+            })
+         
+        };
+
+        document.querySelector('#viewMoreTwo').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 1
+
+            let secondSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                secondSearch = myCities[0].split(",");
+                searchTemps(secondSearch[0], secondSearch[1], viewCount, searchMore);
+            })
+        };
+
+        document.querySelector('#viewMoreThree').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 2
+            let thirdSearch;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                thirdSearch = myCities[0].split(",");
+                searchTemps(thirdSearch[0], thirdSearch[1], viewCount, searchMore);
+            })
+        };
+
+        document.querySelector('#returnOne').onclick = function(event){
+            event.preventDefault();
+            let viewCount = 0;
+
+            fetch('http://localhost:8080/locations')
+            .then(response => response.json())
+            .then(json => {
+                myCities = json;
+            })
+            .then(()  => {
+                firstSearch = myCities[0].split(",");
+                searchTemps(firstSearch[0], firstSearch[1], viewCount, currentTemp);
+            })
+
+        }
+*/
+        /*
+        TODO: Fetch each JSON once and save each to use for viewMore/return instead of fetching a ton?
+        */
+        
+    </script>
+
+  </body>
+</html>
