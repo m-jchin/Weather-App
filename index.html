@@ -145,6 +145,7 @@
                 let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
                         .then(response => response.json())
                         .then(json => cityJsons[i] = json, searchTemps(cityJsons[i], i, currentTemp));
+                        
                 searchTemps(a, i, currentTemp);
                 console.log(a)
                 console.log(i)
@@ -155,6 +156,7 @@
                 let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
                         .then(response => response.json())
                         .then(json => cityJsons[i] = json, searchTemps(cityJsons[i], i, currentTemp));
+
                 console.log(a)
                 console.log(i)
                 console.log(cityJsons)
