@@ -2,41 +2,43 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Weather</title>
   </head>
 
   <body>
+    <div id='flexContainerSearch'>
+        <div id='searchColumn'>
+            <h1>Weather App</h1>
+            <p>Please enter a U.S. city and state.</p>
 
-    <h1>Weather App</h1>
-    <h3>Please enter a U.S. city and state.</h3>
-
-    <form class='searchCity'>
-        <input type="text" placeholder="Orlando, Florida">
-        <button type="submit" class="searchButton">Search</button>
-        <button type="submit" class="previousButton">Previous</button>
-    </form>
-
-    <div>
-        <p class='firstCity'> </p>
-        <div id='viewMoreOne'> </div>
-        <div id='returnOne'> </div>
+            <form class='searchCity'>
+                <input type="text" placeholder="Orlando, Florida">
+                <button type="submit" class="searchButton">Search</button>
+            </form>
+        </div>
     </div>
 
-    <div id = 'first'>
-        <p class='secondCity'> </p>
-        <div id='viewMoreTwo'> </div>
-        <div id='returnTwo'> </div>
+    <div id='flexContainerContent'>
+        <div id='first'>
+            <p class='firstCity'> </p>
+            <div id='viewMoreOne'> </div>
+            <div id='returnOne'> </div>
+        </div>
+
+        <div id = 'second'>
+            <p class='secondCity'> </p>
+            <div id='viewMoreTwo'> </div>
+            <div id='returnTwo'> </div>
+        </div>
+
+        <div id = 'third'>
+            <p class='thirdCity'> </p>
+            <div id='viewMoreThree'> </div>
+            <div id='returnThree'> </div>
+        </div>
     </div>
 
-    <div id = 'second'>
-        <p class='thirdCity'> </p>
-        <div id='viewMoreThree'> </div>
-        <div id='returnThree'> </div>
-    </div>
-
-    <div id='third'>
-        <p class='previousCity'></p>
-    </div>
 
     <script>
         const baseURL = 'api.openweathermap.org';
@@ -127,6 +129,7 @@
                     document.querySelector("#first").style.display = 'inline';
                     document.querySelector("#second").style.display = 'inline';
                     document.querySelector("#third").style.display = 'inline';
+                    i=3;
                 }
                 else if (sizeOfServerArray == 2){
                     document.querySelector("#first").style.display = 'inline';
@@ -135,52 +138,50 @@
                 }
                 else if (sizeOfServerArray == 1){
                     document.querySelector("#first").style.display = 'inline';
+                    i=1;
                 }
                 else{
                     document.querySelector("#first").style.display = 'none';
                     document.querySelector("#second").style.display = 'none';
                     document.querySelector("#third").style.display = 'none';
                 }
-
-
-                // create event handlers for each "View More Button"
-                let viewMoreOneBtn = document.querySelector('#viewMoreOne');  
-                viewMoreOneBtn.onclick =  function(event){
-            
-	                // prevents page refreshing
-	                event.preventDefault();
-
-                    //console.log(abc)
-                    searchTemps(cityJsons[0], 0, searchMore);
-
-                };
-
-                let viewMoreTwoBtn = document.querySelector('#viewMoreTwo');  
-                viewMoreTwoBtn.onclick =  function(event){
-            
-	                // prevents page refreshing
-	                event.preventDefault();
-
-                    //console.log(abc)
-                    searchTemps(cityJsons[1],1, searchMore);
-
-                };
-
-                let viewMoreThreeBtn = document.querySelector('#viewMoreThree');  
-                viewMoreThreeBtn.onclick =  function(event){
-            
-	                // prevents page refreshing
-	                event.preventDefault();
-
-                    //console.log(abc)
-                    searchTemps(cityJsons[2],2, searchMore);
-
-                };
-                
-                return cityJsons;
+                //return cityJsons;
             }
         }
 
+        // create event handlers for each "View More Button"
+        let viewMoreOneBtn = document.querySelector('#viewMoreOne');  
+        viewMoreOneBtn.onclick =  function(event){
+            
+	        // prevents page refreshing
+	        event.preventDefault();
+
+            //console.log(abc)
+            searchTemps(cityJsons[0], 0, searchMore);
+
+        };
+
+        let viewMoreTwoBtn = document.querySelector('#viewMoreTwo');  
+        viewMoreTwoBtn.onclick =  function(event){
+            
+	        // prevents page refreshing
+	        event.preventDefault();
+
+            //console.log(abc)
+            searchTemps(cityJsons[1],1, searchMore);
+
+        };
+
+        let viewMoreThreeBtn = document.querySelector('#viewMoreThree');  
+        viewMoreThreeBtn.onclick =  function(event){
+            
+	        // prevents page refreshing
+	        event.preventDefault();
+
+            //console.log(abc)
+            searchTemps(cityJsons[2],2, searchMore);
+
+        };
 
         // Event handler searches city weather API on submit
         // Adds city to server array
@@ -269,14 +270,14 @@
             if (searchType == "currentTemp"){ 
                 if (count == 0){ 
                     document.querySelector("#first").style.display = 'inline';
-                    document.querySelector(".firstCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.querySelector(".firstCity").innerHTML =   weatherObject.name + ": " + weatherObject.main.temp + " degrees fahrenheit."
                     document.getElementById("viewMoreOne").innerHTML = '<button>View More</button>'
                     document.getElementById("viewMoreOne").style.display = 'inline'
                     document.getElementById("returnOne").style.display = 'none' 
                 }
                 else if (count == 1){   
                     document.querySelector("#second").style.display = 'inline';          
-                    document.querySelector(".secondCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.querySelector(".secondCity").innerHTML = weatherObject.name + ": " + weatherObject.main.temp + " degrees fahrenheit."
                     document.getElementById("viewMoreTwo").innerHTML = '<button>View More</button>'
                     document.getElementById("viewMoreTwo").style.display = 'inline'
                     document.getElementById("returnTwo").style.display = 'none' 
@@ -284,7 +285,7 @@
                 }
                 else{    
                     document.querySelector("#third").style.display = 'inline';
-                    document.querySelector(".thirdCity").innerHTML = "The current temperature in " + weatherObject.name + " is " + weatherObject.main.temp + " degrees fahrenheit."
+                    document.querySelector(".thirdCity").innerHTML = weatherObject.name + ": " + weatherObject.main.temp + " degrees fahrenheit."
                     document.getElementById("viewMoreThree").innerHTML = '<button>View More</button>';  
                     document.getElementById("viewMoreThree").style.display = 'inline'
                     document.getElementById("returnThree").style.display = 'none' 
@@ -316,7 +317,7 @@
             }
         }   
 
-        startUpTwo();
+       startUpTwo();
 
         
     </script>
