@@ -1,7 +1,3 @@
-
-const baseURL = 'api.openweathermap.org';
-const key = "f561787d1d228ebb3f7ab09e4729c788";
-//const url = 'http://api.openweathermap.org/data/2.5/weather?zip=32817,us&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial';
 let weatherObj;
 let emptyString = '';
 
@@ -177,7 +173,7 @@ searchBtn.onclick = async function(event){
         // display current temperature at city to div 1,2, or 3
         if (counterBoi === 2){
         document.querySelector('#third').style.display = 'flex';
-        let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
+        let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid='+ myKey +'&units=imperial')
                 .then(response => response.json())
                 .then(json => cityJsons[counterBoi] = json);
         
@@ -187,7 +183,7 @@ searchBtn.onclick = async function(event){
             counterBoi = 0; 
         }
         else{ 
-            let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid=f561787d1d228ebb3f7ab09e4729c788&units=imperial')
+            let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid='+ myKey +'&units=imperial')
                 .then(response => response.json())
                 .then(json => cityJsons[counterBoi] = json);
 
