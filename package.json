@@ -1,0 +1,20 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "A web application which provides users with real-time weather information for up to three cities.\r ![Demo CountPages alpha](https://j.gifs.com/OMBW5G.gif)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-jchin/Weather-App.git"
+  },
+  "author": "Ming Chin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-jchin/Weather-App/issues"
+  },
+  "homepage": "https://github.com/m-jchin/Weather-App#readme"
+}
