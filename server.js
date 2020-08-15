@@ -10,7 +10,7 @@ let counter = 0;
 
 
 http.createServer((req,res) =>{
-    if (startup == false && req.method == 'GET' && req.url == '/locations')
+    if (startup == true && cities.length == 0  && req.method == 'GET' && req.url == '/locations' || startup == false && req.method == 'GET' && req.url == '/locations')
     {
         res.writeHead(200, {'Content-Type' : 'application/json', 'Access-Control-Allow-Origin' : '*'})
         let sendEmpty = JSON.stringify(cities);
@@ -25,6 +25,14 @@ http.createServer((req,res) =>{
         returnLocations = JSON.stringify(cities);
         console.log('Sent to frontend: ' + returnLocations)
         res.write(returnLocations)
+        res.end()
+    }
+    else if (startup == true && req.method == 'GET' && req.url == '/count')
+    {
+        res.writeHead(200, {'Content-Type' : 'application/json', 'Access-Control-Allow-Origin' : '*'})
+        console.log('Sent to counter to front end! '+ counter)
+        let counterToJson = JSON.stringify(counter);     
+        res.write(counterToJson)
         res.end()
     }
     else if (startup === false && req.method == 'POST' && req.url == '/locations')
@@ -68,6 +76,7 @@ http.createServer((req,res) =>{
                 }
                 else{
                     cities[counter] = city;
+                    console.log(cities)
                     counter++;
                 }
                 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Weather</title>
+  </head>
+
+  <body>
+    
+    <div id='searchContainer'>
+        <h1 id='appHeader'>Weather App</h1>
+        <p id='appHeaderTwo'>Please enter a U.S. city and state.</p>
+
+        <form id='searchCity'>
+            <input id='userEntry' type="text" placeholder="city,state">
+            <button id='submitButton' type="submit" class="searchButton">Search</button>
+        </form>
+    </div>
+
+
+    <div id='flexContainerContent'>
+        <div id='first'>
+            <p id='firstCity'> </p>
+            <div id='viewMoreOne'> </div>
+            <div id='returnOne'> </div>
+        </div>
+
+        <div id='second'>
+            <p id='secondCity'> </p>
+            <div id='viewMoreTwo'> </div>
+            <div id='returnTwo'> </div>
+        </div>
+
+        <div id='third'>
+            <p id='thirdCity'> </p>
+            <div id='viewMoreThree'> </div>
+            <div id='returnThree'> </div>
+        </div>
+    </div>
+    
+    <script type='text/javascript' src='config.js'></script>
+    <script src="index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+body{
+    background-color: #3eb0f7;
+}
+
+#flexContainerContent{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    font-family: 'Roboto', sans-serif;
+}
+
+#first, #second, #third{ /* containers for each card */
+    display:none;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    color: white;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 0.1px solid black;
+    height: 250px;
+    width: 200px;
+    flex-wrap: wrap; /* this keeps the text in line and above the buttons */
+    justify-content: center;
+    flex-direction: row;
+    border-radius: 9px;
+    background-repeat: no-repeat;
+    background-size: 250%;
+    
+}
+
+#firstCity, #secondCity, #thirdCity{ /* <p> elements for each card */
+    display: flex;
+    justify-content: center;
+}
+
+#viewMoreOne, #viewMoreTwo, #viewMoreThree, #returnOne, #returnTwo, #returnThree{ /* view more & return buttons for each card */
+    display: flex;
+    justify-content: center;
+    align-self: flex-end;
+    align-items: flex-end;
+    width: 60%;
+}
+
+#viewMoreOneButton, #viewMoreTwoButton, #viewMoreThreeButton, #returnOneButton, #returnTwoButton, #returnThreeButton{
+    border-radius: 6px;
+    background-color: white;
+}
+
+#searchContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1{
+    margin-block-end: 0px;
+    margin-block-start: 0px;
+}
+
+#userEntry{
+    border-bottom: 2px solid white;
+    background: transparent;
+    outline: none;
+    color: white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+::placeholder{
+    color: white;
+}
+
+.searchButton{
+    background-color: #3eb0f7;
+    border: 2.5px solid white;
+    color: white;
+    outline: none;
+    border-radius: 8px;
+}
+.searchButton:active {
+    transform: translateY(4px);
+}
+
+#appHeader, #appHeaderTwo{
+    color: white;
+}
