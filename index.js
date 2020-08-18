@@ -16,32 +16,26 @@ let cityJsons = [];
 let abc;
 let counterBoi;
 let x;
-let myKey;
+let myKey = config.MY_KEY;
 
 
 startUpTwo();
 
 async function startup(){ // fetch array from server 
-    let myKey = await fetch('https://weather-app-mchin.herokuapp.com/key')
-    .then(response => response.json())
-    .then(json => {
-        myKey = json; 
-        console.log(myKey);
-    })
-
-    let myCities = await fetch('https://weather-app-mchin.herokuapp.com/')
+    let myCities = await fetch('http://localhost:8080/locations')
     .then(response => response.json())
     .then(json => {
         x = json; 
         return x;
     })
 
-    let counterboi = await fetch('https://weather-app-mchin.herokuapp.com/counter')
+    let counterboi = await fetch('http://localhost:8080/count')
     .then(response => response.json())
     .then(json => {
         counterBoi = json; 
         //return x;
     })
+
     
     console.log(counterBoi);
 
@@ -174,7 +168,7 @@ searchBtn.onclick = async function(event){
     
     if (cityEnteredString.trim()){
         // saving searches to server
-        postData('https://weather-app-mchin.herokuapp.com/', cityEnteredString)
+        postData('http://localhost:8080/locations', cityEnteredString)
 
         // display current temperature at city to div 1,2, or 3
         if (counterBoi === 2){
