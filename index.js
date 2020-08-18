@@ -40,6 +40,7 @@ async function startup(){ // fetch array from server
     .then(response => response.json())
     .then(json => {
         myKey = json; 
+        console.log(myKey);
     })
 
     
