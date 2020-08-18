@@ -36,7 +36,7 @@ async function startup(){ // fetch array from server
         //return x;
     })
 
-    let counterboi = await fetch('https://weather-app-mchin.herokuapp.com/key')
+    let myKey = await fetch('https://weather-app-mchin.herokuapp.com/key')
     .then(response => response.json())
     .then(json => {
         myKey = json; 
