@@ -22,6 +22,13 @@ let myKey;
 startUpTwo();
 
 async function startup(){ // fetch array from server 
+    let myKey = await fetch('https://weather-app-mchin.herokuapp.com/key')
+    .then(response => response.json())
+    .then(json => {
+        myKey = json; 
+        console.log(myKey);
+    })
+
     let myCities = await fetch('https://weather-app-mchin.herokuapp.com/')
     .then(response => response.json())
     .then(json => {
@@ -35,14 +42,6 @@ async function startup(){ // fetch array from server
         counterBoi = json; 
         //return x;
     })
-
-    let myKey = await fetch('https://weather-app-mchin.herokuapp.com/key')
-    .then(response => response.json())
-    .then(json => {
-        myKey = json; 
-        console.log(myKey);
-    })
-
     
     console.log(counterBoi);
 
