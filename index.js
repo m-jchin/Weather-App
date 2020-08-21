@@ -1,91 +1,73 @@
 let weatherObj;
-let emptyString = '';
-
-let previousCity = 'HELLO';
-let previousCityTwo = 'WORLD';
-let threeCitiesSave = [];
-let i = 0;
-let loadCounter = 0;
-let btn;
 let currentTemp = 'currentTemp';
 let searchMore = 'searchMore';
-
-let sizeOfServerArray;
 let serverCities; 
-let cityJsons = [];     
-let abc;
+let cityWeatherJsons = [];     
 let counterBoi;
-let x;
 let myKey = config.MY_KEY;
 
 
-startUpTwo();
+displayInitialInfo();
 
-async function startup(){ // fetch array from server 
-    let myCities = await fetch('http://localhost:8080/locations')
+async function loadServerData(){ // fetch array from server 
+    let citiesFromServer = await fetch('http://localhost:8080/locations')
     .then(response => response.json())
     .then(json => {
-        x = json; 
-        return x;
-    })
+        return json;
+    });
 
-    let counterboi = await fetch('http://localhost:8080/count')
+    counterBoi = await fetch('http://localhost:8080/count')
     .then(response => response.json())
     .then(json => {
-        counterBoi = json; 
-        //return x;
-    })
+        return json; 
+    });
 
     
     console.log(counterBoi);
 
-    if (!(myCities.length)){
+    if (!(citiesFromServer.length)){
         console.log("No information present!")
         return serverCities = [];
     }
     else{
-        sizeOfServerArray = myCities.length
-        return myCities; // return the array that was recevied from the server 
+        return citiesFromServer; // return the array that was recevied from the server 
     }
 }
 
-async function startUpTwo(){        
+async function displayInitialInfo(){        
 
-    serverCities = await startup(); //serverCities is an array here*
+    serverCities = await loadServerData(); //serverCities is an array here*
     console.log(serverCities)
-    //counterBoi = serverCities.length;
+
 
     if  (serverCities.length > 0){ // here we are getting the weather JSON for each location in the array
         for (let w = 0; w < serverCities.length; w++){
-            cityJsons[w] = await getWeatherJson(serverCities[w]);
+            cityWeatherJsons[w] = await getWeatherJson(serverCities[w]);
         }
         
-        console.log(serverCities) // should print array location strings 
-        console.log(cityJsons); // should print array of weather JSONs
+        console.log(serverCities) // expected print array location strings 
+        console.log(cityWeatherJsons); // expected print array of weather JSONs
 
         for (let j = 0; j < serverCities.length; j++){
-            searchTemps(cityJsons[j], j, currentTemp)  // startup load of each location temperatures
+            searchTemps(cityWeatherJsons[j], j, currentTemp)  // startup load of each location temperatures
         }
         
 
         // determining how many weather information divs to display on load
-        if (sizeOfServerArray == 3){
+        if (serverCities.length == 3){
             document.querySelector("#flexContainerContent").style.display = 'flex';
             document.querySelector("#first").style.display = 'flex';
             document.querySelector("#second").style.display = 'flex';
             document.querySelector("#third").style.display = 'flex';
-            //counterBoi = 0;
         }
-        else if (sizeOfServerArray == 2){
+        else if (serverCities.length == 2){
             document.querySelector("#flexContainerContent").style.display = 'flex';
             document.querySelector("#first").style.display = 'flex';
             document.querySelector("#second").style.display = 'flex';
-            //counterBoi = 2;
         }
-        else if (sizeOfServerArray == 1){
+        else if (serverCities.length == 1){
             document.querySelector("#flexContainerContent").style.display = 'flex';
             document.querySelector("#first").style.display = 'flex';
-            //counterBoi = 1
             
         }
         else{
@@ -94,7 +76,6 @@ async function startUpTwo(){
             document.querySelector("#second").style.display = 'none';
             document.querySelector("#third").style.display = 'none';
         }
-        //return cityJsons;
     }
 }
 
@@ -119,42 +100,32 @@ async function getWeatherJson(location){
 // create event handlers for each "View More Button"
 let viewMoreOneBtn = document.querySelector('#viewMoreOne');  
 viewMoreOneBtn.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
 
-    //console.log(abc)
-    searchTemps(cityJsons[0], 0, searchMore);
-
+    searchTemps(cityWeatherJsons[0], 0, searchMore);
 };
 
 let viewMoreTwoBtn = document.querySelector('#viewMoreTwo');  
 viewMoreTwoBtn.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
-
-    //console.log(abc)
-    searchTemps(cityJsons[1],1, searchMore);
-
+    
+    searchTemps(cityWeatherJsons[1],1, searchMore);
 };
 
 let viewMoreThreeBtn = document.querySelector('#viewMoreThree');  
 viewMoreThreeBtn.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
-
-    //console.log(abc)
-    searchTemps(cityJsons[2],2, searchMore);
-
+    
+    searchTemps(cityWeatherJsons[2],2, searchMore);
 };
 
 // Event handler searches city weather API on submit
 // Adds city to server array
 let searchBtn = document.querySelector('.searchButton');  
 searchBtn.onclick = async function(event){
-    
     // prevents page refreshing
     event.preventDefault();
 
@@ -175,7 +146,7 @@ searchBtn.onclick = async function(event){
         document.querySelector('#third').style.display = 'flex';
         let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid='+ myKey +'&units=imperial')
                 .then(response => response.json())
-                .then(json => cityJsons[counterBoi] = json);
+                .then(json => cityWeatherJsons[counterBoi] = json);
         
             console.log(a)
             console.log(counterBoi)         
@@ -185,10 +156,10 @@ searchBtn.onclick = async function(event){
         else{ 
             let a = await fetch('http://api.openweathermap.org/data/2.5/weather?q=' + cityEnteredString + '&appid='+ myKey +'&units=imperial')
                 .then(response => response.json())
-                .then(json => cityJsons[counterBoi] = json);
+                .then(json => cityWeatherJsons[counterBoi] = json);
 
             console.log(a)
-            console.log(cityJsons[counterBoi])
+            console.log(cityWeatherJsons[counterBoi])
             console.log(counterBoi)
             searchTemps(a, counterBoi, currentTemp);
             counterBoi++;
@@ -201,42 +172,30 @@ searchBtn.onclick = async function(event){
 
 let returnOne  = document.querySelector('#returnOne');  
 returnOne.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
-
-    //console.log(abc)
-    //i = 1;
-    searchTemps(cityJsons[0],0, currentTemp);
-
+    
+    searchTemps(cityWeatherJsons[0],0, currentTemp);
 };
 
 let returnTwo  = document.querySelector('#returnTwo');  
 returnTwo.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
-    //i = 2;
-    //console.log(abc)
-    searchTemps(cityJsons[1],1, currentTemp);
-
+    
+    searchTemps(cityWeatherJsons[1],1, currentTemp);
 };
 
 let returnThree  = document.querySelector('#returnThree');  
 returnThree.onclick =  function(event){
-    
     // prevents page refreshing
     event.preventDefault();
-
-    //console.log(abc)
     
-    searchTemps(cityJsons[2],2, currentTemp);
-
+    searchTemps(cityWeatherJsons[2],2, currentTemp);
 };
 
 // Fetch weather API
 function searchTemps(weatherObject, count, searchType){
-    
     // this section displays current temperatures for the city searched
     if (searchType == "currentTemp"){ 
         if (count == 0){ 
