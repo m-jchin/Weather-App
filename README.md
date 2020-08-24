@@ -1,5 +1,5 @@
 # Weather-App
-A web application which provides users with real-time weather information for up to three cities. This repository currently works using the required config.js file and localhost. A fully published website is a WIP. 
+A web application which provides users with real-time weather information for up to three cities. This repository currently works using the required config.js file and localhost.
 
 
 
